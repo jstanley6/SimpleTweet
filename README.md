@@ -51,7 +51,7 @@ The challenges with this project was being limited API request calls while getti
 
 ## License
 
-    Copyright [yyyy] [name of copyright owner]
+    Copyright [2019] [Jason Stanley]
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
