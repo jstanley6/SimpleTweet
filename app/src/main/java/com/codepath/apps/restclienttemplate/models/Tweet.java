@@ -8,13 +8,24 @@ import org.parceler.Parcel;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 @Parcel
 public class Tweet {
 
-    public String body;
-    public String created_at;
-    public User user;
+    @ColumnInfo
+    @PrimaryKey(autoGenerate=true)
     public long id;
+    @ColumnInfo
+    public String body;
+    @ColumnInfo
+    public String created_at;
+    @ColumnInfo
+    public User user;
+
 
     // empty constructor needed by the Parceler library
     public Tweet() {}
