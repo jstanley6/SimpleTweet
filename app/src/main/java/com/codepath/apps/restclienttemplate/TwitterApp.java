@@ -18,6 +18,7 @@ import com.facebook.stetho.Stetho;
  */
 public class TwitterApp extends Application {
 
+    TwitterDatabase twitterDatabase;
     MyDatabase myDatabase;
 
     @Override
@@ -25,8 +26,8 @@ public class TwitterApp extends Application {
         super.onCreate();
         // when upgrading versions, kill the original tables by using
 		// fallbackToDestructiveMigration()
-        myDatabase = Room.databaseBuilder(this, MyDatabase.class,
-                MyDatabase.NAME).fallbackToDestructiveMigration().build();
+        twitterDatabase = Room.databaseBuilder(this, TwitterDatabase.class,
+                TwitterDatabase.NAME).fallbackToDestructiveMigration().build();
 
         // use chrome://inspect to inspect your SQL database
         Stetho.initializeWithDefaults(this);
@@ -36,7 +37,16 @@ public class TwitterApp extends Application {
         return (TwitterClient) TwitterClient.getInstance(TwitterClient.class, context);
     }
 
+    public TwitterDatabase getTwitterDatabase() {
+        return twitterDatabase;
+    }
+
     public MyDatabase getMyDatabase() {
         return myDatabase;
     }
+
+    public void setMyDatabase(MyDatabase myDatabase) {
+        this.myDatabase = myDatabase;
+    }
+
 }

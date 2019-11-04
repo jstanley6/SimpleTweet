@@ -9,28 +9,37 @@ import android.view.View;
 
 import com.codepath.apps.restclienttemplate.models.SampleModel;
 import com.codepath.apps.restclienttemplate.models.SampleModelDao;
+import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.oauth.OAuthLoginActionBarActivity;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 
-	SampleModelDao sampleModelDao;
-	
+	//SampleModelDao sampleModelDao;
+	TweetDao tweetDao;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		final SampleModel sampleModel = new SampleModel();
-		sampleModel.setName("CodePath");
+		final Tweet tweetModel = new Tweet();
+//		final SampleModel sampleModel = new SampleModel();
+//		sampleModel.setName("CodePath");
 
-		sampleModelDao = ((TwitterApp) getApplicationContext()).getMyDatabase().sampleModelDao();
+		//sampleModelDao = ((TwitterApp) getApplicationContext()).getMyDatabase().sampleModelDao();
+		tweetDao = (TweetDao) ((TwitterApp) getApplicationContext()).getTwitterDatabase().tweetDao();
 
 		AsyncTask.execute(new Runnable() {
 			@Override
 			public void run() {
-				sampleModelDao.insertModel(sampleModel);
+				tweetDao.insertModel(tweetModel);
 			}
 		});
+//		AsyncTask.execute(new Runnable() {
+//			@Override
+//			public void run() {
+//				sampleModelDao.insertModel(sampleModel);
+//			}
+//		});
 	}
 
 

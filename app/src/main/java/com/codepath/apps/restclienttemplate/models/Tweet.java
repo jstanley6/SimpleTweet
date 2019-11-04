@@ -10,10 +10,13 @@ import java.util.List;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity
+
 @Parcel
+@Entity(foreignKeys = @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "userId"))
 public class Tweet {
 
     @ColumnInfo
@@ -24,6 +27,9 @@ public class Tweet {
     @ColumnInfo
     public String created_at;
     @ColumnInfo
+    public long userId;
+    // this field will be ignored by Room, but still can be used in other places in the Twitter app
+    @Ignore
     public User user;
 
 
@@ -33,10 +39,13 @@ public class Tweet {
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
         tweet.body = jsonObject.getString("text");
-        tweet.created_at = jsonObject.getString("created_at");
-        tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.id = jsonObject.getLong("id");
-
+        tweet.created_at = jsonObject.getString("created_at");
+        User user = User.fromJson(jsonObject.getJSONObject("user"));
+        tweet.user = user;
+        tweet.id = jsonObject.getLong("id");
+        // Capture user id assigned by the server
+        tweet.userId = user.id;
         return tweet;
 
     }

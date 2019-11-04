@@ -6,10 +6,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import okhttp3.Headers;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -21,7 +23,7 @@ import java.util.List;
 public class TimelineActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeContainer;
-
+    TweetDao tweetDao;
     TwitterClient client;
     RecyclerView rvTweets;
     List<Tweet> tweets;
@@ -76,6 +78,7 @@ public class TimelineActivity extends AppCompatActivity {
         // Adds the scroll listener to RecyclerView
         rvTweets.addOnScrollListener(scrollListener);
        populateHomeTimeline();
+        tweetDao = ((TwitterApp) getApplicationContext()).getTwitterDatabase().tweetDao();
 
     }
 
@@ -118,7 +121,25 @@ public class TimelineActivity extends AppCompatActivity {
                 JSONArray jsonArray = json.jsonArray;
                 try {
                     tweetsAdapter.clear();
-                    tweetsAdapter.addAll(Tweet.fromJsonArray(jsonArray));
+                    final List<Tweet> freshTweets = Tweet.fromJsonArray(json.jsonArray);
+                    final List<User> freshUsers = User.fromJsonTweetArray(json.jsonArray);
+                    tweetsAdapter.addAll(freshTweets);
+
+                    // Interaction with Database can't happen on the Main thread
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            // runInTransaction() allows to perform multiple db actions in a batch thus preserving consistency
+                            ((TwitterApp) getApplicationContext()).getTwitterDatabase().runInTransaction(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Inserting both Tweets and Users to their respective tables
+                                    tweetDao.insertModel(freshUsers.toArray(new User[0]));
+                                    tweetDao.insertModel(freshTweets.toArray(new Tweet[0]));
+                                }
+                            });
+                        }
+                    });
                     // Now we call setRefreshing(false) to signal refresh has finished
                     swipeContainer.setRefreshing(false);
                 } catch (JSONException e) {
