@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3f79faaf84e3f97f601b5b1bd2cd8e35",
+    "identityHash": "606feb04353368f18e97d691431ca1c1",
     "entities": [
       {
         "tableName": "Tweet",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `body` TEXT, `created_at` TEXT, `userId` INTEGER NOT NULL, FOREIGN KEY(`userId`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `body` TEXT, `created_at` TEXT, `userId` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`userId`) REFERENCES `User`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -37,7 +37,7 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": [
@@ -96,7 +96,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3f79faaf84e3f97f601b5b1bd2cd8e35')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '606feb04353368f18e97d691431ca1c1')"
     ]
   }
 }

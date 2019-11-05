@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,7 +10,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.codepath.apps.restclienttemplate.EndlessRecyclerViewScrollListener;
+import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.TweetWithUser;
+import com.codepath.apps.restclienttemplate.adapters.TweetsAdapter;
+import com.codepath.apps.restclienttemplate.TwitterApp;
+import com.codepath.apps.restclienttemplate.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.TweetDao;
 import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -77,8 +84,29 @@ public class TimelineActivity extends AppCompatActivity {
         };
         // Adds the scroll listener to RecyclerView
         rvTweets.addOnScrollListener(scrollListener);
-       populateHomeTimeline();
+
+
         tweetDao = ((TwitterApp) getApplicationContext()).getTwitterDatabase().tweetDao();
+
+        // Remember to always move DB queries off of the Main thread
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                // Request list of Tweets with Users using DAO
+                List<TweetWithUser> tweetsFromDatabase = tweetDao.recentItems();
+                tweetsAdapter.clear();
+                Log.i(TAG, "Showing data from database");
+
+                // TweetWithUser has to be converted Tweet objects with nested User objects (see next snippet)
+                List<Tweet> tweetList = TweetWithUser.getTweetList(tweetsFromDatabase);
+
+                if(!tweetList.isEmpty()) {
+                    tweetsAdapter.addAll(tweetList);
+                } else {
+                    populateHomeTimeline();
+                }
+            }
+        });
 
     }
 
@@ -107,7 +135,7 @@ public class TimelineActivity extends AppCompatActivity {
 
                 Log.e(TAG, "onFailure for loadMoreData! " + response, throwable);
             }
-        }, tweets.get(tweets.size() - 1).id);
+        } ,tweets.get(tweets.size() - 1).id);
 
     }
 
@@ -121,8 +149,8 @@ public class TimelineActivity extends AppCompatActivity {
                 JSONArray jsonArray = json.jsonArray;
                 try {
                     tweetsAdapter.clear();
-                    final List<Tweet> freshTweets = Tweet.fromJsonArray(json.jsonArray);
-                    final List<User> freshUsers = User.fromJsonTweetArray(json.jsonArray);
+                    final List<Tweet> freshTweets = Tweet.fromJsonArray(jsonArray);
+                    final List<User> freshUsers = User.fromJsonTweetArray(jsonArray);
                     tweetsAdapter.addAll(freshTweets);
 
                     // Interaction with Database can't happen on the Main thread

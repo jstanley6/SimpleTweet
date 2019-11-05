@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.models;
 
 import com.codepath.apps.restclienttemplate.TweetWithUser;
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -10,19 +10,21 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 @Dao
 public interface TweetDao {
-    @Query("SELECT Tweet.body AS tweet_body, Tweet.created_at as tweet_createdAt, " +
+    @Query("SELECT Tweet.body AS tweet_body, Tweet.created_at as tweet_created_at, " +
             "User.* FROM Tweet INNER JOIN User ON Tweet.userId = User.id " +
-            "ORDER BY Tweet.id DESC LIMIT 5")
+            "ORDER BY Tweet.id DESC LIMIT 20")
     List<TweetWithUser> recentItems();
 
-    // retrieving tweets is omitted
+    @Query("SELECT * FROM Tweet ORDER BY created_at DESC")
+    List<Tweet> getTweets();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertModel(Tweet... tweet);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertModel(User... toArray);
+    void insertModel(User... user);
 }

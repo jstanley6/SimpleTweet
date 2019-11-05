@@ -20,14 +20,18 @@ import androidx.room.PrimaryKey;
 public class Tweet {
 
     @ColumnInfo
-    @PrimaryKey(autoGenerate=true)
+    @PrimaryKey
     public long id;
+
     @ColumnInfo
     public String body;
+
     @ColumnInfo
     public String created_at;
+
     @ColumnInfo
     public long userId;
+
     // this field will be ignored by Room, but still can be used in other places in the Twitter app
     @Ignore
     public User user;
@@ -43,7 +47,6 @@ public class Tweet {
         tweet.created_at = jsonObject.getString("created_at");
         User user = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.user = user;
-        tweet.id = jsonObject.getLong("id");
         // Capture user id assigned by the server
         tweet.userId = user.id;
         return tweet;

@@ -1,6 +1,7 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.data;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.TweetDao;
 import com.codepath.apps.restclienttemplate.models.User;
 
 import androidx.room.Database;

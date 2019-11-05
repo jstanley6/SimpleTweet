@@ -1,5 +1,7 @@
 package com.codepath.apps.restclienttemplate.models;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +12,7 @@ import java.util.List;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Parcel
@@ -34,9 +37,11 @@ public class User {
     public static User fromJson(JSONObject jsonObject) throws JSONException {
 
         User user = new User();
+
+        user.name = jsonObject.getString("name");
+
         // we should read the value of id from JSON now
         user.id = jsonObject.getLong("id");
-        user.name = jsonObject.getString("name");
         user.screenName = jsonObject.getString("screen_name");
         user.profileImageUrl = jsonObject.getString("profile_image_url_https");
 
@@ -48,7 +53,7 @@ public class User {
         List<User> users = new ArrayList<>();
 
         for(int i = 0; i < jsonArray.length(); i++) {
-            User user = User.fromJson(jsonArray.getJSONObject(i));
+            User user = User.fromJson(jsonArray.getJSONObject(i).getJSONObject("user"));
             users.add(user);
         }
 

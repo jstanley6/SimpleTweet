@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,16 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.activities.DetailActivity;
 import com.codepath.apps.restclienttemplate.models.Tweet;
-import com.codepath.apps.restclienttemplate.models.User;
 
-import org.parceler.Parcel;
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
