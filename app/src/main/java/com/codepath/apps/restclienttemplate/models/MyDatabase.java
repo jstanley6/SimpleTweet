@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate.data;
+package com.codepath.apps.restclienttemplate.models;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;

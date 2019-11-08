@@ -1,21 +1,25 @@
 package com.codepath.apps.restclienttemplate.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import okhttp3.Headers;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.codepath.apps.restclienttemplate.EndlessRecyclerViewScrollListener;
+import com.codepath.apps.restclienttemplate.utils.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.R;
-import com.codepath.apps.restclienttemplate.TweetWithUser;
+import com.codepath.apps.restclienttemplate.network.TweetWithUser;
 import com.codepath.apps.restclienttemplate.adapters.TweetsAdapter;
-import com.codepath.apps.restclienttemplate.TwitterApp;
-import com.codepath.apps.restclienttemplate.TwitterClient;
+import com.codepath.apps.restclienttemplate.network.TwitterApp;
+import com.codepath.apps.restclienttemplate.network.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.TweetDao;
 import com.codepath.apps.restclienttemplate.models.User;
@@ -23,12 +27,13 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TimelineActivity extends AppCompatActivity {
-
+    public static final int RESULT_CODE = 20;
     private SwipeRefreshLayout swipeContainer;
     TweetDao tweetDao;
     TwitterClient client;
@@ -37,6 +42,46 @@ public class TimelineActivity extends AppCompatActivity {
     TweetsAdapter tweetsAdapter;
     public static final String TAG = "TimelineActivity";
     EndlessRecyclerViewScrollListener scrollListener;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId() == R.id.compose) {
+            //Compose Icon has been selected
+            //Navigate to compose activity
+            Intent intent = new Intent(this, ComposeActivity.class);
+            startActivityForResult(intent, RESULT_CODE);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if(requestCode == RESULT_CODE && resultCode == RESULT_OK) {
+
+            //Get data from the intent (tweet)
+            Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
+            //Update the RV with the tweet
+            //modify data source
+            tweets.add(0, tweet);
+            //update the adapter
+            tweetsAdapter.notifyItemInserted(0);
+            rvTweets.smoothScrollToPosition(0);
+
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +107,7 @@ public class TimelineActivity extends AppCompatActivity {
                 populateHomeTimeline();
             }
         });
+
 
        client = TwitterApp.getRestClient(this);
 
@@ -92,10 +138,11 @@ public class TimelineActivity extends AppCompatActivity {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                Log.i(TAG, "Showing data from database");
                 // Request list of Tweets with Users using DAO
                 List<TweetWithUser> tweetsFromDatabase = tweetDao.recentItems();
                 tweetsAdapter.clear();
-                Log.i(TAG, "Showing data from database");
+
 
                 // TweetWithUser has to be converted Tweet objects with nested User objects (see next snippet)
                 List<Tweet> tweetList = TweetWithUser.getTweetList(tweetsFromDatabase);
@@ -107,6 +154,8 @@ public class TimelineActivity extends AppCompatActivity {
                 }
             }
         });
+
+
 
     }
 

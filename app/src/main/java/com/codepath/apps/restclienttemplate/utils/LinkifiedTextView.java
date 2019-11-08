@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate;
+package com.codepath.apps.restclienttemplate.utils;
 
 import android.content.Context;
 import android.text.Layout;

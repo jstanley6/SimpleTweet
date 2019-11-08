@@ -1,8 +1,6 @@
 package com.codepath.apps.restclienttemplate.models;
 
-import com.codepath.apps.restclienttemplate.TweetWithUser;
-import com.codepath.apps.restclienttemplate.models.Tweet;
-import com.codepath.apps.restclienttemplate.models.User;
+import com.codepath.apps.restclienttemplate.network.TweetWithUser;
 
 import java.util.List;
 
@@ -10,7 +8,6 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
 
 @Dao
 public interface TweetDao {

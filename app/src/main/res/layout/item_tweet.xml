@@ -28,7 +28,7 @@
         android:layout_toEndOf="@+id/ivProfileImage"
         tools:text="jstanley" />
 
-    <com.codepath.apps.restclienttemplate.LinkifiedTextView
+    <com.codepath.apps.restclienttemplate.utils.LinkifiedTextView
         android:id="@+id/tvBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,5 +37,6 @@
         android:layout_marginTop="2dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         android:autoLink="all"
+        android:linksClickable="true"
         tools:text="This is a tweet!!" />
 </RelativeLayout>

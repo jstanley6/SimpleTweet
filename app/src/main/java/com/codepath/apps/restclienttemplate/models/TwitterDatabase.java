@@ -1,4 +1,4 @@
-package com.codepath.apps.restclienttemplate.data;
+package com.codepath.apps.restclienttemplate.models;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.TweetDao;
