@@ -47,13 +47,13 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='project-2-twitter-part2.gif' title='Video Walkthrough' width=250 alt='Video Walkthrough Part 2'><br>
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+The hardest challenge was getting the DB's set up and getting the code in the right places to communicate with each other.
 
 ## Open-source libraries used
 
