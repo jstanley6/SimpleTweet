@@ -13,7 +13,7 @@ import androidx.room.Query;
 public interface TweetDao {
     @Query("SELECT Tweet.body AS tweet_body, Tweet.created_at as tweet_created_at, " +
             "User.* FROM Tweet INNER JOIN User ON Tweet.userId = User.id " +
-            "ORDER BY Tweet.id DESC LIMIT 20")
+            "ORDER BY Tweet.id DESC LIMIT 5")
     List<TweetWithUser> recentItems();
 
     @Query("SELECT * FROM Tweet ORDER BY created_at DESC")
